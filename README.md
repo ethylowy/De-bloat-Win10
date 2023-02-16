@@ -9,4 +9,4 @@ W skrypcie są wyremowane niektóre sekcje, takie jak :
 - wyłączenie zadań automatycznej aktualizacji aplikacji pobraqnych ze sklepu MS - jeśli nie korzysztasz z takich aplikacji, możesz śmiało usunąć REM na początku tej linijki.
 
 ![image](https://user-images.githubusercontent.com/51444728/219337913-aac40b37-e56e-414c-b9a5-f2d05eaec300.png)
-![image](https://user-images.githubusercontent.com/51444728/219338835-ddaa80e1-1855-4950-bfb9-409775436e06.png)
+![image](https://user-images.githubusercontent.com/51444728/219339652-0a2a4fa3-9184-4bf2-8f2a-0a8003816077.png)
