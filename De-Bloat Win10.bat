@@ -196,4 +196,5 @@ goto :done
 
 :done
 echo Czyszczenie zakonczone! Milego korzystania z czystszej wersji Win10
+echo Mozesz juz bezpiecznie zamknac to okno.
 pause >null
