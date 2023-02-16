@@ -1,13 +1,7 @@
 echo off
 echo.
-echo ##############################################################
-echo ███████╗████████╗██╗  ██╗██╗   ██╗
-echo ██╔════╝╚══██╔══╝██║  ██║╚██╗ ██╔╝
-echo █████╗     ██║   ███████║ ╚████╔╝ 
-echo ██╔══╝     ██║   ██╔══██║  ╚██╔╝  
-echo ███████╗   ██║   ██║  ██║   ██║   
-echo ╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝                  
-echo De-Bloat Windows 10 & bye bye telemetry script
+echo ##############################################################          
+echo De-Bloat Windows 10 plus bye-bye telemetry script
 echo Uruchamiasz na wlasna odpowidzialnosc :)
 echo ##############################################################
 echo.
@@ -78,28 +72,10 @@ schtasks /Change /TN "Microsoft\Windows\Autochk\Proxy" /Disable
 echo Automatyczna konfiguracja proxy - wylaczona...
 REM schtasks /Change /TN "Microsoft\Windows\CloudExperienceHost\CreateObjectTask" /Disable
 REM schtasks /Change /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" /Disable
-
-:timesynchro
-set /p %timesync%= 1 - wyłącz synchronizację / 2 - nie wyłączaj:
-
-:start
-if %timesync%==1 goto #A1
-if %timesync%==2 goto #B1
-:end
-
-:#A1
-schtasks /Change /TN "Microsoft\Windows\Time Synchronization\ForceSynchronizeTime" /Disable
-schtasks /Change /TN "Microsoft\Windows\Time Synchronization\SynchronizeTime" /Disable
-echo Synchronizacja czasu wyłączona - wylaczona...
-goto :continue
-
-:#B1
-echo Kontynuuje skrypt.
-goto :continue
-
-:continue
 REM schtasks /Change /TN "Microsoft\Windows\Windows Error Reporting\QueueReporting" /Disable
 REM schtasks /Change /TN "Microsoft\Windows\WindowsUpdate\Automatic App Update" /Disable
+REM schtasks /Change /TN "Microsoft\Windows\Time Synchronization\ForceSynchronizeTime" /Disable
+REM schtasks /Change /TN "Microsoft\Windows\Time Synchronization\SynchronizeTime" /Disable
 echo.
 echo == Usuwam Telemetrie Windows ==
 echo.
@@ -173,11 +149,11 @@ echo ##############################################################
 set /p %onedrive%=1 - usun OneDrive / 2 - nie usuwaj:
 
 :start
-if %onedrive%==1 goto #A2
-if %onedrive%==2 goto #B2
+if %onedrive%==1 goto A2
+if %onedrive%==2 goto B2
 :end
 
-:#A2
+:A2
 start /wait "" "%SYSTEMROOT%\SYSWOW64\ONEDRIVESETUP.EXE" /UNINSTALL
 rd C:\OneDriveTemp /Q /S >NUL 2>&1
 rd "%USERPROFILE%\OneDrive" /Q /S >NUL 2>&1
@@ -190,7 +166,7 @@ start /wait TASKKILL /F /IM explorer.exe
 start explorer.exe
 goto :done
 
-:#B2
+:B2
 echo Koniec skryptu.
 goto :done
 
