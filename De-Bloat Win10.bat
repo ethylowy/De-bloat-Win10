@@ -1,12 +1,20 @@
 echo off
 echo.
 echo ##############################################################
-echo De-Bloat Windows 10
+echo ███████╗████████╗██╗  ██╗██╗   ██╗
+echo ██╔════╝╚══██╔══╝██║  ██║╚██╗ ██╔╝
+echo █████╗     ██║   ███████║ ╚████╔╝ 
+echo ██╔══╝     ██║   ██╔══██║  ╚██╔╝  
+echo ███████╗   ██║   ██║  ██║   ██║   
+echo ╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝                  
+echo De-Bloat Windows 10 & bye bye telemetry script
 echo Uruchamiasz na wlasna odpowidzialnosc :)
 echo ##############################################################
 echo.
 pause
-echo == Zatrzymywanie niektorych uslug ==
+echo =========================
+echo == Zatrzymywanie uslug ==
+echo =========================
 echo.
 sc stop DiagTrack
 echo DiagTrack - zatrzymany...
@@ -19,7 +27,9 @@ echo WindowsMediaPlayer po sieci - zatrzymany...
 sc stop WSearch
 echo WindowsSearch - zatrzymany.
 echo.
-echo == Wylaczanie niektorych uslug ==
+echo ======================
+echo == Wylaczanie uslug ==
+echo ======================
 echo.
 sc config DiagTrack start= disabled
 echo DiagTrack - wylaczony...
@@ -37,29 +47,57 @@ sc config WSearch start= disabled
 echo WindowsSearch - wylaczony...
 REM sc config SysMain start= disabled
 echo.
-echo == Wylaczanie niektorych zadan w harmonogramie ==
+echo ======================================
+echo == Wylaczanie zadan w harmonogramie ==
+echo ======================================
 echo.
 schtasks /Change /TN "Microsoft\Windows\AppID\SmartScreenSpecific" /Disable
+echo SmartScreen - wylaczony...
 schtasks /Change /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" /Disable
+echo Microsoft Compatibility Appraiser - wylaczony...
 schtasks /Change /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater" /Disable
+echo Program Data Updater - wylaczony...
 schtasks /Change /TN "Microsoft\Windows\Application Experience\StartupAppTask" /Disable
 schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable
 schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask" /Disable
 schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" /Disable
 schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Uploader" /Disable
+echo Skladowe Windows Customer Experience Improvement - wylaczone...
 schtasks /Change /TN "Microsoft\Windows\Shell\FamilySafetyUpload" /Disable
 schtasks /Change /TN "Microsoft\Office\OfficeTelemetryAgentLogOn" /Disable
 schtasks /Change /TN "Microsoft\Office\OfficeTelemetryAgentFallBack" /Disable
+echo Telemetria dla Windows Office - wylaczona...
 schtasks /Change /TN "Microsoft\Office\Office 15 Subscription Heartbeat" /Disable
 schtasks /Change /TN "Microsoft\Windows\FileHistory\File History (maintenance mode)" /Disable
+echo Historia plikow - wylaczona...
 schtasks /Change /TN "Microsoft\Windows\Maintenance\WinSAT" /Disable
 schtasks /Change /TN "Microsoft\Windows\NetTrace\GatherNetworkInfo" /Disable
+echo Telemetria sieci - wylaczona...
 schtasks /Change /TN "Microsoft\Windows\PI\Sqm-Tasks" /Disable
 schtasks /Change /TN "Microsoft\Windows\Autochk\Proxy" /Disable
+echo Automatyczna konfiguracja proxy - wylaczona...
 REM schtasks /Change /TN "Microsoft\Windows\CloudExperienceHost\CreateObjectTask" /Disable
 REM schtasks /Change /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" /Disable
-REM schtasks /Change /TN "Microsoft\Windows\Time Synchronization\ForceSynchronizeTime" /Disable
-REM schtasks /Change /TN "Microsoft\Windows\Time Synchronization\SynchronizeTime" /Disable
+
+:timesynchro
+set /p %timesync%= 1 - wyłącz synchronizację / 2 - nie wyłączaj:
+
+:start
+if %timesync%==1 goto #A1
+if %timesync%==2 goto #B1
+:end
+
+:#A1
+schtasks /Change /TN "Microsoft\Windows\Time Synchronization\ForceSynchronizeTime" /Disable
+schtasks /Change /TN "Microsoft\Windows\Time Synchronization\SynchronizeTime" /Disable
+echo Synchronizacja czasu wyłączona - wylaczona...
+goto :continue
+
+:#B1
+echo Kontynuuje skrypt.
+goto :continue
+
+:continue
 REM schtasks /Change /TN "Microsoft\Windows\Windows Error Reporting\QueueReporting" /Disable
 REM schtasks /Change /TN "Microsoft\Windows\WindowsUpdate\Automatic App Update" /Disable
 echo.
@@ -79,7 +117,7 @@ echo zmiana klucza -> Pozwol aplikacjom na uzywanie mogego Advertising ID...
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f
 echo wylaczam SmartScreen dla Windows Store...
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost" /v EnableWebContentEvaluation /t REG_DWORD /d 0 /f
-echo ... i wymuszania "lokalnego" jezyka na stronach www
+echo ... i wymuszanie "lokalnego" jezyka na stronach www
 reg add "HKCU\Control Panel\International\User Profile" /v HttpAcceptLanguageOptOut /t REG_DWORD /d 1 /f
 echo Udostepnianie danych HotSpot'ow - adios
 reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting" /v value /t REG_DWORD /d 0 /f
@@ -96,7 +134,7 @@ reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ad
 echo zmieniam tryb pracy WindowsExplorer na "Ten Komputer" zamiast "Szybki dostep"
 reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "LaunchTo" /t REG_DWORD /d 1 /f
 echo.
-echo == Usuwanie smieciowych aplikacji == 
+echo == Usuwanie MS Bloatware == 
 PowerShell -Command "Get-AppxPackage *3DBuilder* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Getstarted* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *WindowsAlarms* | Remove-AppxPackage"
@@ -135,11 +173,11 @@ echo ##############################################################
 set /p %onedrive%=1 - usun OneDrive / 2 - nie usuwaj:
 
 :start
-if %onedrive%==1 goto #A
-if %onedrive%==1 goto #B
+if %onedrive%==1 goto #A2
+if %onedrive%==2 goto #B2
 :end
 
-:#A
+:#A2
 start /wait "" "%SYSTEMROOT%\SYSWOW64\ONEDRIVESETUP.EXE" /UNINSTALL
 rd C:\OneDriveTemp /Q /S >NUL 2>&1
 rd "%USERPROFILE%\OneDrive" /Q /S >NUL 2>&1
@@ -152,10 +190,10 @@ start /wait TASKKILL /F /IM explorer.exe
 start explorer.exe
 goto :done
 
-:#B
+:#B2
 echo Koniec skryptu.
 goto :done
 
 :done
-echo Czyszczenie zakonczone! Milego korzystania z czystej wersji Win10
+echo Czyszczenie zakonczone! Milego korzystania z czystszej wersji Win10
 pause >null
